@@ -1,33 +1,15 @@
 import { Vehicle } from './vehicle';
 import { CarType } from './car-type';
+import { CarFeature, CarSpec } from './car-feature';
 
-export class Car implements Vehicle {
-  brand: string = '';
-  engine: number;
-  id: string;
-  isStarted?: boolean = false;
-  name: string;
-  type: CarType;
+export class Car implements CarSpec, CarFeature {
   private fuel: number = 0;
-
-  constructor(car?: Car) {
-    // karena optional (?) === undefined
-    // harus di cek dahulu
-    if (car) {
-      this.id = car.id
-      this.brand = car.brand
-      this.name = car.name
-      this.type = car.type
-      this.engine = car.engine
-    }
-  }
-  // setter
+  readonly color: string;
+  constructor(private readonly vehicle?: Vehicle) {}
   setFuel(fuel: number): void {
     this.fuel = fuel;
   }
-
   startEngine(): void {
-    this.isStarted = true
     if (this.fuel > 0) {
       console.log(`Engine car is started..brmmmmmm`);
     } else {
@@ -35,15 +17,27 @@ export class Car implements Vehicle {
     }
   }
 
-  setName(name: string): void {
-    this.name = name
+  engineSpec(cc: number): number {
+    return cc;
   }
 
-  // getter
-  getName(): string {
-    return this.name
+  engineType(type: string): string {
+    return type;
   }
 
+  fuelType(fuel: string): string {
+    return fuel;
+  }
 
+  safety(feature: string[]): void {
+    feature.forEach((item => {
+      console.log(item);
+    }))
+  }
 
+  speed(km: number): string {
+    if (km > 500)
+      return 'Sport mode';
+    return 'City mode'
+  }
 }

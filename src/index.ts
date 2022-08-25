@@ -1,21 +1,37 @@
-import { Hero } from './model/hero';
+// Generic
+// Flexible untuk menerima jenis tipe data
+// Keyword generic -> T
+// Penggunaan nya bisa di function, class, interface
 
-const daud: Hero = new Hero('Daud', 100, 100, 10);
-const fahlan: Hero = new Hero('Fahlan', 100, 100, 20);
-const riza: Hero = new Hero('Riza', 100, 100, 10);
-const aisyah: Hero = new Hero('Aisyah', 100, 100, 10);
-const rasyid: Hero = new Hero('Rasyid', 100, 100, 40);
+// Before
+function getData(items: any[]) : any[] {
+  return [].concat(items);
+}
 
-console.log(fahlan.getName(), 'current hp :', fahlan.getHp());
-console.log(daud.getName(), 'attack', fahlan.getName());
-daud.attack(fahlan);
-console.log(fahlan.getName(), 'current hp :', fahlan.getHp());
+const people: any[] = getData(['John', 'Alex', 'Kohl']);
+const dadu: any[] = getData([1,2,3,4,5,6]);
+console.log(people);
+console.log(dadu);
 
-console.log(riza.getName(), 'current mana :', riza.getMana());
-console.log(riza.getName(), 'heal', fahlan.getName());
-riza.heal(fahlan);
-console.log(riza.getName(), 'current mana :', riza.getMana());
-console.log(fahlan.getName(), 'current hp :', fahlan.getHp());
-console.log(riza.getName(), 'current hp :', riza.getHp());
+function getDataOther<T>(items: T[]) : T[] {
+  return new Array<T>().concat(items);
+}
 
+const people02: Array<string> = getDataOther<string>(['John', 'Alex', 'Kohl']);
+const dadu02: Array<number> = getDataOther<number>([1,2,3,4,5,6]);
+console.log(people02);
+console.log(dadu02);
 
+type Employee = {
+  name: string;
+  age: number;
+  skills?: string[];
+}
+
+const employees: Employee[] = getDataOther<Employee>([
+    {name: 'Daud', age: 20},
+    {name: 'Fahlan', age: 20},
+    {name: 'Riza', age: 20},
+    {name: 'Aisyah', age: 20},
+]);
+console.log(employees);

@@ -9,6 +9,7 @@ const orders: string[] = [
     'cafe latte',
     'cappuccino',
     'kopi susu keluarga',
+    'tea',
     'black tea',
     'hazelnut',
     'ice cream',
@@ -22,12 +23,33 @@ const orders: string[] = [
 //     else console.log(coffee);
 //   })
 // });
+//
+// const takeOrder: Promise<string>[] = orders.map((order) => {
+//   return cafe.orderCoffeeWithAsync(order);
+// });
 
-const takeOrder: Promise<string>[] = orders.map((order) => {
-  return cafe.orderCoffeeWithAsync(order);
-});
+// Promise.all(takeOrder)
+//     .then((result: string[]) => {
+//         console.log(result);
+//     })
+//     .catch((error) => {
+//         console.error(error);
+//     })
 
-Promise.all(takeOrder)
+async function orderProcess(): Promise<string[]> {
+    const result: string[] = [];
+    for (const order of orders) {
+        try {
+            const takeOrder: string = await cafe.orderCoffeeWithAsync(order);
+            result.push(takeOrder);
+        } catch (error) {
+            console.log(`Pesanan ${order} tidak berhasil, karena ${error}`);
+        }
+    }
+    return result;
+}
+
+orderProcess()
     .then((result: string[]) => {
         console.log(result);
     })

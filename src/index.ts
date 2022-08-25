@@ -15,24 +15,25 @@ import { Observable } from 'rxjs';
 class PromiseVersusObservable {
   myObservable: any;
   myPromise: any;
+  mySubscription: any;
 
   create(): void {
     this.myObservable = new Observable<string>(observer => {
       console.log('Observable has created.');
-      observer.next('Observable has emitted 1.');
-      observer.next('Observable has emitted 2.');
-      observer.next('Observable has emitted 3.');
+      setInterval(() => {
+        observer.next('Observable has emitted.')
+      }, 1000)
     });
     this.myPromise = new Promise<string>(resolve => {
       console.log('Promise has created.');
-      resolve('Promise has emitted 1.');
-      resolve('Promise has emitted 2.');
-      resolve('Promise has emitted 3.');
+      setInterval(() => {
+        resolve('Promise has emitted.')
+      }, 1000)
     });
   }
 
   execute(): void {
-    this.myObservable.subscribe((data: any) => {
+    this.mySubscription = this.myObservable.subscribe((data: any) => {
       console.log(data);
     });
 
@@ -40,8 +41,16 @@ class PromiseVersusObservable {
       console.log(data);
     });
   }
+
+  cancel(): void {
+    this.mySubscription.unsubscribe();
+  }
 }
 
 const promiseObservable: PromiseVersusObservable = new PromiseVersusObservable()
 promiseObservable.create();
 promiseObservable.execute();
+setTimeout(() => {
+  promiseObservable.cancel();
+}, 5000);
+

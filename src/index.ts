@@ -1,58 +1,20 @@
-import Cafe from './asynchronous/order-coffee';
+import { Kulkas } from './data/kulkas';
 
-const cafe: Cafe = new Cafe();
-// const takeOrder = (error: any, coffee: string) => {
-//   if (error) console.log(error);
-//   else console.log(coffee);
-// }
-const orders: string[] = [
-    'cafe latte',
-    'cappuccino',
-    'kopi susu keluarga',
-    'tea',
-    'black tea',
-    'hazelnut',
-    'ice cream',
-];
-// cafe.orderCoffee(orders[6], (error: any, coffee: string) => {
-//   if (error) console.log(error);
-//   else console.log(coffee);
-//
-//   cafe.orderCoffee(orders[6], (error: any, coffee: string) => {
-//     if (error) console.log(error);
-//     else console.log(coffee);
-//   })
-// });
-//
-// const takeOrder: Promise<string>[] = orders.map((order) => {
-//   return cafe.orderCoffeeWithAsync(order);
-// });
-
-// Promise.all(takeOrder)
-//     .then((result: string[]) => {
-//         console.log(result);
-//     })
-//     .catch((error) => {
-//         console.error(error);
-//     })
-
-async function orderProcess(): Promise<string[]> {
-    const result: string[] = [];
-    for (const order of orders) {
-        try {
-            const takeOrder: string = await cafe.orderCoffeeWithAsync(order);
-            result.push(takeOrder);
-        } catch (error) {
-            console.log(`Pesanan ${order} tidak berhasil, karena ${error}`);
-        }
-    }
-    return result;
+async function refrigeratorProcess() {
+    try {
+        const kulkas : Kulkas = new Kulkas();
+        const aksi = await kulkas.buka();
+        console.log( await aksi.lihat() );
+        console.log( await aksi.simpan('Gajah') );
+        console.log( await aksi.simpan('Nanas') );
+        // await kulkas.tutup();
+        console.log( await aksi.lihat() );
+        console.log( await aksi.ambil('Gajah') );
+        console.log( await aksi.ambil('Gajah') );
+        await kulkas.tutup();
+    } catch (error) {
+        console.log(error);
+    };
 }
 
-orderProcess()
-    .then((result: string[]) => {
-        console.log(result);
-    })
-    .catch((error) => {
-        console.error(error);
-    })
+refrigeratorProcess().catch()

@@ -19,16 +19,24 @@ class PromiseVersusObservable {
 
   create(): void {
     this.myObservable = new Observable<string>(observer => {
-      console.log('Observable has created.');
-      setInterval(() => {
-        observer.next('Observable has emitted.')
-      }, 1000)
+      observer.next('Observable has emitted.');
     });
+
     this.myPromise = new Promise<string>(resolve => {
-      console.log('Promise has created.');
-      setInterval(() => {
-        resolve('Promise has emitted.')
-      }, 1000)
+      resolve('Promise has emitted.');
+    });
+
+    // Obserble layaknya synchronous, dia akan di panggil duluan ketika ada promise bersamanya
+    // Bagaimana jika ingin tampil setelah promise ?
+    // Cara nya adalah dengan menerapkan setTimeout.
+    setTimeout(() => {
+      this.myObservable.subscribe((data: any) => {
+        console.log(data);
+      });
+    }, 0)
+
+    this.myPromise.then((data: any) => {
+      console.log(data);
     });
   }
 
@@ -49,8 +57,4 @@ class PromiseVersusObservable {
 
 const promiseObservable: PromiseVersusObservable = new PromiseVersusObservable()
 promiseObservable.create();
-promiseObservable.execute();
-setTimeout(() => {
-  promiseObservable.cancel();
-}, 5000);
 

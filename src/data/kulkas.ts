@@ -1,7 +1,6 @@
 import { IAction, IKulkas } from './ikulkas';
 
 class Action implements IAction {
-
   isi: string[] = [];
   condition: boolean = true;
 

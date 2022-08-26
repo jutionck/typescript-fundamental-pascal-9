@@ -1,58 +1,29 @@
-import { Kulkas } from './observable/kulkas';
-import { catchError, of, switchMap, tap } from 'rxjs';
+import { TodoService } from './todo/todo.service';
+import { combineLatest, map } from 'rxjs';
+import { Todo } from './todo/todo.model';
 
-const kulkas: Kulkas = new Kulkas();
-const action = kulkas.buka();
-action.pipe(
-    tap((data) => console.log('tap.action.lihat: ', data)),
-    switchMap(() => {
-      return kulkas.action.lihat();
-    }),
-    catchError((error) => {
-      return of('Ada error')
-    }),
-    tap((data) => console.log('tap.action.simpan: ', data)),
+const todoService: TodoService = new TodoService();
+combineLatest([
+  todoService.add({name: 'Madang', isDone: false}),
+  todoService.add({name: 'Minum', isDone: true}),
+  todoService.add({name: 'Turu', isDone: false}),
+  todoService.add({name: 'Ngoding', isDone: false}),
+]).subscribe((todos: Todo[]) => {
+  console.log(`${todos.length} kegiatan sudah ditambahkan`);
+});
 
-    switchMap(() => {
-      return kulkas.action.simpan('Gajah');
-    }),
-    catchError((error) => {
-      return of('Ada error')
-    }),
-    tap((data) => console.log('tap.action.simpan: ', data)),
+todoService.notify().subscribe((isUpdate: boolean) => {
+  if (isUpdate) {
+    todoService.list().pipe(
+        map((list: Todo[]) => {
+          return list.map((todo: Todo) => {
+            return `Todo ${todo.name} ${(todo.isDone ? 'sudah selesai' : 'belum selesai')}`;
+          })
+        })
+    ).subscribe((todos) => {
+      console.log(todos);
+    });
+  }
+})
 
-    switchMap(() => {
-      return kulkas.action.simpan('Nanas');
-    }),
-    catchError((error) => {
-      return of('Ada error')
-    }),
-    tap((data) => console.log('tap.action.lihat: ', data)),
-    switchMap(() => {
-      return kulkas.action.lihat();
-    }),
-    catchError((error) => {
-      return of('Ada error')
-    }),
-    tap((data) => console.log('tap.action.ambil: ', data)),
-    switchMap(() => {
-      return kulkas.action.ambil('Gajah');
-    }),
-    catchError((error) => {
-      return of('Ada error')
-    }),
-    tap((data) => console.log('tap.action.ambil: ', data)),
-    switchMap(() => {
-      return kulkas.action.ambil('Gajah');
-    }),
-    catchError((error) => {
-      return of('Ada error')
-    }),
-    tap((data) => console.log('tap.action.tutup: ', data)),
-    switchMap(() => {
-      return kulkas.tutup();
-    }),
-    catchError((error) => {
-      return of('Ada error')
-    })
-).subscribe((data) => console.log('subscribe:',data))
+
